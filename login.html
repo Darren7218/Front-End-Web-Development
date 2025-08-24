@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Sign Up</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="app.js"></script>
+
+</head>
+<body>
+
+<div class="navbar">
+  <a class="brand" href="index.html">FitnessTech</a>
+  <a href="index.html">Home</a>
+  <a href="fitness-gadgets.html">Gadgets (API)</a>
+  <a href="workout-tracker.html">Workout Tracker</a>
+  <a href="contact.html">Contact</a>
+  <span style="flex:1"></span>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html" id="navLogin">Login</a>
+  <a href="#" id="navLogout" style="display:none" onclick="logout();return false;">Logout</a>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    const navLogin = document.getElementById('navLogin');
+    const navLogout = document.getElementById('navLogout');
+    if(loggedIn){ if(navLogin) navLogin.style.display='none'; if(navLogout) navLogout.style.display='inline'; }
+  });
+</script>
+
+<div class="container">
+
+<h2>Login / Sign Up</h2>
+<p class="notice">Demo auth: no backend. We store a cookie <code>rememberUser</code> and use <code>sessionStorage</code> to keep you signed in.</p>
+<form id="loginForm" class="card p" style="max-width:460px">
+  <label for="username">Username</label>
+  <input id="username" class="input" required placeholder="e.g. alex">
+  <label for="email">Email</label>
+  <input id="email" type="email" class="input" required placeholder="name@example.com">
+  <button class="btn block" type="submit">Continue</button>
+  <small class="muted">By continuing you accept cookies so we can remember your username for 7 days.</small>
+</form>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const remembered = getCookie('rememberUser');
+    if(remembered){ document.getElementById('username').value = remembered; }
+  });
+  document.getElementById('loginForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if(!username || !email){ alert('Please fill all fields.'); return; }
+    login(username);
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get('redirect') || 'dashboard.html';
+    window.location.href = redirect;
+  });
+</script>
+
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
+    <div id="sharebar" class="sharebar"></div>
+    <script>document.addEventListener('DOMContentLoaded',()=>{renderShareBar('sharebar',{text:'Check out this Fitness Tech page!'});});</script>
+    <hr>
+    <div class="grid">
+      <div>
+        <p><strong>Quick Links</strong></p>
+        <p><a href="index.html">Home</a><br><a href="fitness-gadgets.html">Gadgets</a><br><a href="workout-tracker.html">Workout Tracker</a></p>
+      </div>
+      <div>
+        <p><strong>Facebook Page Plugin (example)</strong></p>
+        <div class="notice">Below is a demo Facebook Page plugin iframe to satisfy the "social media plugin" requirement.</div>
+        <div style="max-width:340px">
+          <iframe title="Facebook Page Plugin" style="border:none;overflow:hidden;width:100%;height:140px"
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FFacebookDevelopers&tabs=timeline&width=340&height=140&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="cookiebar" class="cookiebar">
+  <div class="container">
+    <strong>We use cookies</strong> to remember your preferences (like your username).
+    <button class="btn" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+
+
+</body>
+</html>

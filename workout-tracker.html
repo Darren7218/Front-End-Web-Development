@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="app.js"></script>
+
+</head>
+<body>
+
+<div class="navbar">
+  <a class="brand" href="index.html">FitnessTech</a>
+  <a href="index.html">Home</a>
+  <a href="fitness-gadgets.html">Gadgets (API)</a>
+  <a href="workout-tracker.html">Workout Tracker</a>
+  <a href="contact.html">Contact</a>
+  <span style="flex:1"></span>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="login.html" id="navLogin">Login</a>
+  <a href="#" id="navLogout" style="display:none" onclick="logout();return false;">Logout</a>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    const navLogin = document.getElementById('navLogin');
+    const navLogout = document.getElementById('navLogout');
+    if(loggedIn){ if(navLogin) navLogin.style.display='none'; if(navLogout) navLogout.style.display='inline'; }
+  });
+</script>
+
+<div class="container">
+
+<h2>Workout Tracker</h2>
+<div class="grid">
+  <div class="card"><div class="p">
+    <h3>Add Workout</h3>
+    <form id="wForm">
+      <label>Exercise</label><input class="input" id="ex" required placeholder="Push Ups">
+      <label>Duration (min)</label><input class="input" id="du" type="number" min="1" required>
+      <label>Calories</label><input class="input" id="cal" type="number" min="0" required>
+      <button class="btn" type="submit">Save</button>
+    </form>
+  </div></div>
+  <div class="card"><div class="p">
+    <h3>Your Workouts</h3>
+    <table class="table"><thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th></th></tr></thead>
+    <tbody id="wBody"></tbody></table>
+    <button class="btn danger" id="clearAll">Clear All</button>
+  </div></div>
+</div>
+<script>
+function getList(){return JSON.parse(localStorage.getItem('workouts')||'[]');}
+function setList(arr){localStorage.setItem('workouts', JSON.stringify(arr));}
+function render(){
+  const tbody=document.getElementById('wBody');tbody.innerHTML='';
+  getList().forEach((w,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${w.exercise}</td><td>${w.duration} min</td><td>${w.calories}</td>
+      <td><button class="btn secondary" data-i="${i}">Delete</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+document.getElementById('wForm').addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const w={exercise:ex.value.trim(), duration:+du.value, calories:+cal.value};
+  if(!w.exercise||!w.duration){alert('Please enter valid data');return;}
+  const list=getList();list.push(w);setList(list);render();e.target.reset();
+});
+document.getElementById('wBody').addEventListener('click',(e)=>{
+  if(e.target.matches('button[data-i]')){const i=+e.target.getAttribute('data-i');const list=getList();list.splice(i,1);setList(list);render();}
+});
+document.getElementById('clearAll').addEventListener('click',()=>{if(confirm('Clear all workouts?')){localStorage.removeItem('workouts');render();}});
+document.addEventListener('DOMContentLoaded', render);
+</script>
+
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
+    <div id="sharebar" class="sharebar"></div>
+    <script>document.addEventListener('DOMContentLoaded',()=>{renderShareBar('sharebar',{text:'Check out this Fitness Tech page!'});});</script>
+    <hr>
+    <div class="grid">
+      <div>
+        <p><strong>Quick Links</strong></p>
+        <p><a href="index.html">Home</a><br><a href="fitness-gadgets.html">Gadgets</a><br><a href="workout-tracker.html">Workout Tracker</a></p>
+      </div>
+      <div>
+        <p><strong>Facebook Page Plugin (example)</strong></p>
+        <div class="notice">Below is a demo Facebook Page plugin iframe to satisfy the "social media plugin" requirement.</div>
+        <div style="max-width:340px">
+          <iframe title="Facebook Page Plugin" style="border:none;overflow:hidden;width:100%;height:140px"
+            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FFacebookDevelopers&tabs=timeline&width=340&height=140&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="cookiebar" class="cookiebar">
+  <div class="container">
+    <strong>We use cookies</strong> to remember your preferences (like your username).
+    <button class="btn" onclick="acceptCookies()">Accept</button>
+  </div>
+</div>
+
+
+</body>
+</html>
