@@ -6,10 +6,10 @@
 <link rel="stylesheet" href="styles.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="app.js"></script>
-
 </head>
 <body>
 
+<!-- Navbar -->
 <div class="navbar">
   <a class="brand" href="index.html">FitnessTech</a>
   <a href="index.html">Home</a>
@@ -31,52 +31,136 @@
 </script>
 
 <div class="container">
-
 <h2>Workout Tracker</h2>
 <div class="grid">
+  <!-- Add Workout Form -->
   <div class="card"><div class="p">
     <h3>Add Workout</h3>
     <form id="wForm">
-      <label>Exercise</label><input class="input" id="ex" required placeholder="Push Ups">
-      <label>Duration (min)</label><input class="input" id="du" type="number" min="1" required>
-      <label>Calories</label><input class="input" id="cal" type="number" min="0" required>
+      <label>Date</label>
+      <input class="input" id="date" type="date" required>
+      <label>Exercise</label>
+      <input class="input" id="ex" required placeholder="Push Ups">
+      <label>Duration (min)</label>
+      <input class="input" id="du" type="number" min="1" required>
+      <label>Calories</label>
+      <input class="input" id="cal" type="number" min="0" required>
       <button class="btn" type="submit">Save</button>
     </form>
   </div></div>
+
+  <!-- Workout List -->
   <div class="card"><div class="p">
     <h3>Your Workouts</h3>
-    <table class="table"><thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th></th></tr></thead>
-    <tbody id="wBody"></tbody></table>
+    <div id="workoutContainer"></div>
     <button class="btn danger" id="clearAll">Clear All</button>
+    <hr>
+    <h4>Share Your Workouts</h4>
+    <div class="sharebar" id="shareWorkouts"></div>
   </div></div>
 </div>
-<script>
-function getList(){return JSON.parse(localStorage.getItem('workouts')||'[]');}
-function setList(arr){localStorage.setItem('workouts', JSON.stringify(arr));}
-function render(){
-  const tbody=document.getElementById('wBody');tbody.innerHTML='';
-  getList().forEach((w,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${w.exercise}</td><td>${w.duration} min</td><td>${w.calories}</td>
-      <td><button class="btn secondary" data-i="${i}">Delete</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
-document.getElementById('wForm').addEventListener('submit',(e)=>{
-  e.preventDefault();
-  const w={exercise:ex.value.trim(), duration:+du.value, calories:+cal.value};
-  if(!w.exercise||!w.duration){alert('Please enter valid data');return;}
-  const list=getList();list.push(w);setList(list);render();e.target.reset();
-});
-document.getElementById('wBody').addEventListener('click',(e)=>{
-  if(e.target.matches('button[data-i]')){const i=+e.target.getAttribute('data-i');const list=getList();list.splice(i,1);setList(list);render();}
-});
-document.getElementById('clearAll').addEventListener('click',()=>{if(confirm('Clear all workouts?')){localStorage.removeItem('workouts');render();}});
-document.addEventListener('DOMContentLoaded', render);
-</script>
-
 </div>
 
+<script>
+// Initialize date to today
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('date').valueAsDate = new Date();
+  render();
+});
+
+function getList() { return JSON.parse(localStorage.getItem('workouts')||'[]'); }
+function setList(arr) { localStorage.setItem('workouts', JSON.stringify(arr)); }
+
+function groupByDate(list) {
+  return list.reduce((acc, w) => {
+    acc[w.date] = acc[w.date] || [];
+    acc[w.date].push(w);
+    return acc;
+  }, {});
+}
+
+function render() {
+  const container = document.getElementById('workoutContainer');
+  container.innerHTML = '';
+  const grouped = groupByDate(getList());
+  for (const date in grouped) {
+    const section = document.createElement('div');
+    section.innerHTML = `<h4>${date}</h4>`;
+    const table = document.createElement('table');
+    table.className = 'table';
+    table.innerHTML = '<thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th></th></tr></thead>';
+    const tbody = document.createElement('tbody');
+    grouped[date].forEach((w, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${w.exercise}</td><td>${w.duration} min</td><td>${w.calories}</td>
+        <td><button class="btn secondary" data-date="${date}" data-i="${i}">Delete</button></td>`;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    section.appendChild(table);
+    container.appendChild(section);
+  }
+  updateShareButtons();
+}
+
+document.getElementById('wForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const w = {
+    date: date.value,
+    exercise: ex.value.trim(),
+    duration: +du.value,
+    calories: +cal.value
+  };
+  if (!w.exercise || !w.duration) { alert('Please enter valid data'); return; }
+  const list = getList();
+  list.push(w);
+  setList(list);
+  render();
+  e.target.reset();
+  date.valueAsDate = new Date();
+});
+
+document.getElementById('workoutContainer').addEventListener('click', (e) => {
+  if (e.target.matches('button[data-i]')) {
+    const d = e.target.getAttribute('data-date');
+    const i = +e.target.getAttribute('data-i');
+    const grouped = groupByDate(getList());
+    grouped[d].splice(i, 1);
+    const newList = Object.values(grouped).flat();
+    setList(newList);
+    render();
+  }
+});
+
+document.getElementById('clearAll').addEventListener('click', () => {
+  if (confirm('Clear all workouts?')) {
+    localStorage.removeItem('workouts');
+    render();
+  }
+});
+
+function updateShareButtons() {
+  const allWorkouts = getList();
+  if (allWorkouts.length === 0) {
+    document.getElementById('shareWorkouts').innerHTML = '<p>No workouts to share.</p>';
+    return;
+  }
+  const today = new Date().toISOString().split('T')[0];
+  const todayWorkouts = allWorkouts.filter(w => w.date === today);
+  const summary = todayWorkouts.length > 0
+    ? todayWorkouts.map(w => `${w.exercise} ${w.duration}min (${w.calories}cal)`).join(', ')
+    : 'My fitness progress!';
+  const text = encodeURIComponent(`My workout summary: ${summary}`);
+  const url = encodeURIComponent(window.location.href);
+  document.getElementById('shareWorkouts').innerHTML = `
+    <a href="https://api.whatsapp.com/send?text=${text}%20${url}" target="_blank">WhatsApp</a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank">Facebook</a>
+    <a href="https://twitter.com/intent/tweet?text=${text}&url=${url}&hashtags=fitness,tracker" target="_blank">Twitter</a>
+  `;
+}
+</script>
+
+<!-- Footer -->
 <div class="footer">
   <div class="container">
     <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
@@ -106,7 +190,6 @@ document.addEventListener('DOMContentLoaded', render);
     <button class="btn" onclick="acceptCookies()">Accept</button>
   </div>
 </div>
-
 
 </body>
 </html>
