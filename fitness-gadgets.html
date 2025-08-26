@@ -1,109 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gadgets (API Demo)</title>
-<link rel="stylesheet" href="styles.css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="app.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Gadgets</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body { font-family: Arial, sans-serif; }
 
+/* Hero Section */
+.smart-ring-hero { text-align:center; padding:50px 20px; background:#f9f9f9; }
+.smart-ring-hero img { max-width:250px; margin-bottom:20px; }
+.smart-ring-hero h1 { font-size:2.5rem; margin-bottom:10px; }
+.smart-ring-hero p { font-size:1.2rem; color:#555; }
+
+/* Tabs Section */
+.tab-content { margin-top:20px; }
+.carousel img { max-width:300px; margin:auto; }
+
+/* Specs Table */
+.specs-section table { width:100%; }
+.specs-section th, .specs-section td { padding:8px; }
+
+/* CTA Section */
+.cta-section { text-align:center; padding:40px 20px; background:#fff; }
+
+/* Other Gadgets Grid */
+.api-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:15px; margin-top:30px; }
+.api-card { border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.05); position:relative; overflow:hidden; }
+.api-card img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
+.api-card h4 { margin:10px 0 5px; }
+.api-card p { font-size:14px; color:#555; }
+.learn-more { margin-top:10px; display:inline-block; }
+
+/* Hover Detail Box */
+.hover-details { position:absolute; bottom:-100%; left:0; width:100%; background:#f8f9fa; padding:15px; text-align:left; transition:bottom 0.4s ease; box-shadow:0 -2px 6px rgba(0,0,0,0.15); font-size:14px; line-height:1.4em; }
+.api-card:hover .hover-details { bottom:0; }
+
+/* Footer share icons */
+.icon-btn-img { display:inline-flex; justify-content:center; align-items:center; width:40px; height:40px; border-radius:50%; background:#fff; overflow:hidden; margin:0 6px; border:1px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+.icon-btn-img img { width:70%; height:70%; object-fit:contain; }
+</style>
 </head>
 <body>
-<div class="card">
-  <img src="https://images.unsplash.com/photo-1617005087832-36b5c9a458fd?w=800" alt="Smart Ring">
-  <div class="p">
-    <h3>Smart Ring</h3>
-    <p>Track your sleep, heart rate, and daily activity in a sleek, lightweight design. Perfect for 24/7 health monitoring.</p>
-    <a class="btn" href="#">Buy Now</a>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+  <a class="navbar-brand fw-bold" href="index.html">FitnessTech</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="fitness-gadgets.html">Gadgets (API)</a></li>
+      <li class="nav-item"><a class="nav-link" href="workout-tracker.html">Workout Tracker</a></li>
+      <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+      <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="login.html" id="navLogin">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" id="navLogout" style="display:none;" onclick="logout();return false;">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if(sessionStorage.getItem('isLoggedIn')==='true'){
+    document.getElementById('navLogin').style.display='none';
+    document.getElementById('navLogout').style.display='inline';
+  }
+});
+</script>
+
+<!-- Smart Ring Hero -->
+<section class="smart-ring-hero">
+  <img src="images/smartRing_main.png" alt="Smart Ring">
+  <h1>Smart Ring</h1>
+  <p>The sleek, powerful fitness companion that fits on your finger.</p>
+</section>
+
+<!-- Smart Ring Interactive Tabs -->
+<div class="container mt-4">
+  <ul class="nav nav-tabs" id="smartRingTabs" role="tablist">
+    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#features">Features</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#specs">Specs</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#reviews">Reviews</a></li>
+  </ul>
+  <div class="tab-content mt-3">
+    <div class="tab-pane fade show active" id="features">
+      <div id="featureCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner text-center">
+          <div class="carousel-item active"><img src="images/smartRing.png" class="d-block" alt="Smart Ring View 1"></div>
+          <div class="carousel-item"><img src="images/smartRing2.png" class="d-block" alt="Smart Ring View 2"></div>
+          <div class="carousel-item"><img src="images/smartRing_side.png" class="d-block" alt="Smart Ring View 2"></div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#featureCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featureCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+      <p class="mt-3">Advanced heart rate tracking, sleep analysis, and fitness metrics in a minimalist design.</p>
+    </div>
+    <div class="tab-pane fade" id="specs">
+      <table class="table table-striped">
+        
+        <tr><th>Battery</th><td>Up to 7 days, 60-minute full charge</td></tr>
+        <tr><th>Display</th><td>OLED</td></tr>
+        <tr><th>App</th><td>FitnessTech App (iOS/Android)</td></tr>
+        <tr><th>Compatibility</th><td>iOS 12+ / Android 7+</td></tr>
+        <tr><th>Dimensions</th><td>18mm diameter, 2.5mm thickness</td></tr>
+        <tr><th>Connectivity</th><td>Bluetooth 5.0</td></tr>
+        <tr><th>Material</th><td>Titanium with ceramic finish</td></tr>
+        <tr><th>Sensors</th><td>Skin temperature, PPG (heart rate, HRV), accelerometer</td></tr>
+        <tr><th>Water Resistance</th><td>Up to 50m, IP68</td></tr>
+        <tr><th>Weight</th><td>2.8g</td></tr>
+      </table>
+    </div>
+    <div class="tab-pane fade" id="reviews">
+      <p><strong>John D.</strong>: “Amazing! Super comfortable and accurate.”</p>
+      <p><strong>Lisa P.</strong>: “Perfect for everyday tracking without bulk.”</p>
+    </div>
   </div>
 </div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h3>Ready to experience the future of fitness?</h3>
+  <a href="smart-ring-details.html" class="btn btn-primary btn-lg mt-3">Learn More & Buy</a>
+</section>
+
 <hr>
 
-<div class="navbar">
-  <a class="brand" href="index.html">FitnessTech</a>
-  <a href="index.html">Home</a>
-  <a href="fitness-gadgets.html">Gadgets (API)</a>
-  <a href="workout-tracker.html">Workout Tracker</a>
-  <a href="contact.html">Contact</a>
-  <span style="flex:1"></span>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="login.html" id="navLogin">Login</a>
-  <a href="#" id="navLogout" style="display:none" onclick="logout();return false;">Logout</a>
-</div>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-    const navLogin = document.getElementById('navLogin');
-    const navLogout = document.getElementById('navLogout');
-    if(loggedIn){ if(navLogin) navLogin.style.display='none'; if(navLogout) navLogout.style.display='inline'; }
-  });
-</script>
-
+<!-- Other Gadgets -->
 <div class="container">
-
-<h2>Fitness Gadgets & Exercises (API)</h2>
-<p class="notice">This page demonstrates a <strong>RESTful API call with jQuery</strong>. We fetch exercise info from the public <em>wger</em> API and render cards. If it fails, we fall back to a secondary demo API.</p>
-<div class="grid" id="cards"></div>
-<script>
-function renderItem(title, desc, img){
-  const div=document.createElement('div');div.className='card';
-  div.innerHTML=`<img alt="${title}" src="${img||'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800'}">
-  <div class='p'><h4>${title}</h4><p><small class='muted'>${desc||'No description'}</small></p>
-  <div class='sharebar' id='share-${title.replace(/\W/g,'')}' style='margin-top:8px'></div></div>`;
-  document.getElementById('cards').appendChild(div);
-  const linkText=encodeURIComponent(`I found a cool exercise: ${title}`);
-  const pageUrl=encodeURIComponent(window.location.href.split('#')[0]);
-  const bar=div.querySelector('.sharebar');
-  bar.innerHTML=`<a href="https://api.whatsapp.com/send?text=${linkText}%20${pageUrl}" target="_blank" rel="noopener">WhatsApp</a>
-                 <a href="https://www.facebook.com/sharer/sharer.php?u=${pageUrl}" target="_blank" rel="noopener">Facebook</a>
-                 <a href="https://twitter.com/intent/tweet?text=${linkText}&url=${pageUrl}&hashtags=fitness,tech" target="_blank" rel="noopener">Twitter</a>`;
-}
-function loadPrimary(){ return $.get('https://wger.de/api/v2/exerciseinfo/?limit=8', function(data){
-  (data.results||[]).forEach(item=>{
-    const title=item.name||'Exercise';
-    const desc=(item.description||'').replace(/<[^>]*>?/gm,'').slice(0,120);
-    let img=null; if(item.images&&item.images.length){img=item.images[0].image;}
-    renderItem(title, desc, img);
-  });
-});}
-function loadFallback(){ return $.get('https://dummyjson.com/products?limit=6', function(data){
-  (data.products||[]).forEach(p=>{ renderItem(p.title, p.description, p.thumbnail); });
-});}
-$(function(){ loadPrimary().fail(loadFallback); });
-</script>
-
-</div>
-
-<div class="footer">
-  <div class="container">
-    <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
-    <div id="sharebar" class="sharebar"></div>
-    <script>document.addEventListener('DOMContentLoaded',()=>{renderShareBar('sharebar',{text:'Check out this Fitness Tech page!'});});</script>
-    <hr>
-    <div class="grid">
-      <div>
-        <p><strong>Quick Links</strong></p>
-        <p><a href="index.html">Home</a><br><a href="fitness-gadgets.html">Gadgets</a><br><a href="workout-tracker.html">Workout Tracker</a></p>
+  <h3>Other Recommended Gadgets</h3>
+  <div class="api-grid">
+    <div class="api-card">
+      <img src="images/smartwatch.jpg" alt="Smartwatch">
+      <h4>Smartwatch</h4>
+      <p>Track workouts, monitor heart rate, and stay connected on the go.</p>
+      <a href="#" class="btn btn-outline-primary learn-more">Learn More</a>
+      <div class="hover-details">
+        <strong>About Smartwatch:</strong> Tracks steps, heart rate, calories, and gives notifications. Stylish and waterproof design.
       </div>
-      <div>
-        <p><strong>Facebook Page Plugin (example)</strong></p>
-        <div class="notice">Below is a demo Facebook Page plugin iframe to satisfy the "social media plugin" requirement.</div>
-        <div style="max-width:340px">
-          <iframe title="Facebook Page Plugin" style="border:none;overflow:hidden;width:100%;height:140px"
-            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FFacebookDevelopers&tabs=timeline&width=340&height=140&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false">
-          </iframe>
-        </div>
+    </div>
+    <div class="api-card">
+      <img src="images/fitnessband.jpg" alt="Fitness Band">
+      <h4>Fitness Band</h4>
+      <p>Lightweight band to monitor your steps and calories.</p>
+      <a href="#" class="btn btn-outline-primary learn-more">Learn More</a>
+      <div class="hover-details">
+        <strong>About Fitness Band:</strong> Slim, durable, and water-resistant with long battery life for daily fitness tracking.
+      </div>
+    </div>
+    <div class="api-card">
+      <img src="images/earbuds.jpg" alt="Wireless Earbuds">
+      <h4>Wireless Earbuds</h4>
+      <p>Enjoy music and calls during workouts.</p>
+      <a href="#" class="btn btn-outline-primary learn-more">Learn More</a>
+      <div class="hover-details">
+        <strong>About Wireless Earbuds:</strong> Noise-cancelling, sweat-proof, and delivers premium audio quality.
+      </div>
+    </div>
+    <div class="api-card">
+      <img src="images/yogamat.jpg" alt="Yoga Mat">
+      <h4>Yoga Mat</h4>
+      <p>Perfect for yoga and stretching routines.</p>
+      <a href="#" class="btn btn-outline-primary learn-more">Learn More</a>
+      <div class="hover-details">
+        <strong>About Yoga Mat:</strong> Non-slip, lightweight, and easy to carry for home or studio use.
+      </div>
+    </div>
+    <div class="api-card">
+      <img src="images/smartbottle.png" alt="Smart Water Bottle">
+      <h4>Smart Water Bottle</h4>
+      <p>Track your daily hydration goals easily.</p>
+      <a href="#" class="btn btn-outline-primary learn-more">Learn More</a>
+      <div class="hover-details">
+        <strong>About Smart Bottle:</strong> Tracks your water intake and reminds you to stay hydrated throughout the day.
       </div>
     </div>
   </div>
 </div>
-<div id="cookiebar" class="cookiebar">
-  <div class="container">
-    <strong>We use cookies</strong> to remember your preferences (like your username).
-    <button class="btn" onclick="acceptCookies()">Accept</button>
+
+<!-- Footer -->
+<div class="footer text-center mt-5 p-4 bg-light">
+  <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
+  <div class="share-icons mb-3">
+    <a href="https://api.whatsapp.com/send?text=Check+out+FitnessTech" target="_blank" class="icon-btn-img"><img src="images/whatsapp.png" alt="WhatsApp"></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank" class="icon-btn-img"><img src="images/facebook.png" alt="Facebook"></a>
+    <a href="https://twitter.com/intent/tweet?text=Check+out+FitnessTech" target="_blank" class="icon-btn-img"><img src="images/x.png" alt="Twitter"></a>
+  </div>
+  <hr>
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <h6>Quick Links</h6>
+      <p>
+        <a href="index.html">Home</a><br>
+        <a href="fitness-gadgets.html">Gadgets</a><br>
+        <a href="workout-tracker.html">Workout Tracker</a><br>
+        <a href="contact.html">Contact</a><br>
+        <a href="dashboard.html">Dashboard</a>
+      </p>
+    </div>
   </div>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

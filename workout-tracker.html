@@ -1,64 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Workout Tracker</title>
-<link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker - FitnessTech</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="app.js"></script>
+<style>
+body { font-family: 'Segoe UI', sans-serif; background:#fafafa; transition:background 0.3s, color 0.3s; }
+
+/* Navbar */
+.navbar { box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+/* Header */
+.header { text-align:center; padding:40px 20px; background:#f8f9fa; border-bottom:1px solid #ddd; }
+.header h2 { font-size:2rem; font-weight:bold; }
+
+/* Card Styling */
+.card-custom {
+  background:#fff;
+  border-radius:10px;
+  padding:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom:20px;
+  transition:background 0.3s, color 0.3s;
+}
+.card-custom h3 { font-size:1.3rem; margin-bottom:15px; }
+
+/* Table Styling */
+.table th, .table td { vertical-align:middle; }
+.table thead th { background:#f1f1f1; transition:background 0.3s; }
+
+/* Share Icons */
+.icon-btn-img {
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#fff;
+  overflow:hidden;
+  margin:0 6px;
+  border:1px solid #ccc;
+  box-shadow:0 1px 3px rgba(0,0,0,0.1);
+}
+.icon-btn-img img { width:70%; height:70%; object-fit:contain; }
+
+/* Footer */
+.footer {
+  background:#fff;
+  padding:20px;
+  text-align:center;
+  border-top:1px solid #ddd;
+  transition:background 0.3s, color 0.3s;
+}
+.footer hr { margin:15px auto; width:90%; }
+
+/* Dark Mode Styles */
+body.dark-mode { background:#121212; color:#e0e0e0; }
+body.dark-mode .navbar { background:#1e1e1e !important; }
+body.dark-mode .header { background:#1e1e1e; border-bottom-color:#333; }
+body.dark-mode .card-custom { background:#1f1f1f; color:#e0e0e0; }
+body.dark-mode .table thead th { background:#333; color:#fff; }
+body.dark-mode .footer { background:#1e1e1e; color:#ccc; }
+body.dark-mode .icon-btn-img { background:#2a2a2a; border-color:#555; }
+</style>
 </head>
 <body>
 
 <!-- Navbar -->
-<div class="navbar">
-  <a class="brand" href="index.html">FitnessTech</a>
-  <a href="index.html">Home</a>
-  <a href="fitness-gadgets.html">Gadgets (API)</a>
-  <a href="workout-tracker.html">Workout Tracker</a>
-  <a href="contact.html">Contact</a>
-  <span style="flex:1"></span>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="login.html" id="navLogin">Login</a>
-  <a href="#" id="navLogout" style="display:none" onclick="logout();return false;">Logout</a>
-</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+  <a class="navbar-brand fw-bold" href="index.html">FitnessTech</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="fitness-gadgets.html">Gadgets</a></li>
+      <li class="nav-item"><a class="nav-link active" href="workout-tracker.html">Workout Tracker</a></li>
+      <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+      <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="login.html" id="navLogin">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" id="navLogout" style="display:none;" onclick="logout();return false;">Logout</a></li>
+      <li class="nav-item">
+        <button id="darkModeToggle" class="btn btn-outline-secondary btn-sm ms-3">🌙 Dark Mode</button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-    const navLogin = document.getElementById('navLogin');
-    const navLogout = document.getElementById('navLogout');
-    if(loggedIn){ if(navLogin) navLogin.style.display='none'; if(navLogout) navLogout.style.display='inline'; }
+document.addEventListener('DOMContentLoaded', () => {
+  if(sessionStorage.getItem('isLoggedIn')==='true'){
+    document.getElementById('navLogin').style.display='none';
+    document.getElementById('navLogout').style.display='inline';
+  }
+
+  // Dark Mode Toggle
+  const toggleBtn = document.getElementById('darkModeToggle');
+  const isDark = localStorage.getItem('darkMode') === 'true';
+  if(isDark) document.body.classList.add('dark-mode');
+
+  toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const dark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', dark);
+    toggleBtn.textContent = dark ? '☀️ Light Mode' : '🌙 Dark Mode';
   });
+});
 </script>
 
-<div class="container">
-<h2>Workout Tracker</h2>
-<div class="grid">
-  <!-- Add Workout Form -->
-  <div class="card"><div class="p">
-    <h3>Add Workout</h3>
-    <form id="wForm">
-      <label>Date</label>
-      <input class="input" id="date" type="date" required>
-      <label>Exercise</label>
-      <input class="input" id="ex" required placeholder="Push Ups">
-      <label>Duration (min)</label>
-      <input class="input" id="du" type="number" min="1" required>
-      <label>Calories</label>
-      <input class="input" id="cal" type="number" min="0" required>
-      <button class="btn" type="submit">Save</button>
-    </form>
-  </div></div>
+<!-- Header -->
+<section class="header">
+  <h2>Workout Tracker</h2>
+  <p class="text-muted">Log your exercises and share your fitness progress easily.</p>
+</section>
 
-  <!-- Workout List -->
-  <div class="card"><div class="p">
-    <h3>Your Workouts</h3>
-    <div id="workoutContainer"></div>
-    <button class="btn danger" id="clearAll">Clear All</button>
-    <hr>
-    <h4>Share Your Workouts</h4>
-    <div class="sharebar" id="shareWorkouts"></div>
-  </div></div>
-</div>
+<!-- Main Content -->
+<div class="container mt-4">
+  <div class="row">
+    <!-- Add Workout Form -->
+    <div class="col-md-4">
+      <div class="card-custom">
+        <h3>Add Workout</h3>
+        <form id="wForm">
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input class="form-control" id="date" type="date" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Exercise</label>
+            <input class="form-control" id="ex" required placeholder="Push Ups">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Duration (min)</label>
+            <input class="form-control" id="du" type="number" min="1" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Calories</label>
+            <input class="form-control" id="cal" type="number" min="0" required>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Save Workout</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Workout List -->
+    <div class="col-md-8">
+      <div class="card-custom">
+        <h3>Your Workouts</h3>
+        <div id="workoutContainer" class="mt-3"></div>
+        <button class="btn btn-danger mt-3" id="clearAll">Clear All</button>
+        <hr>
+        <h4>Share Your Workouts</h4>
+        <div class="sharebar mt-2" id="shareWorkouts"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -85,15 +188,15 @@ function render() {
   const grouped = groupByDate(getList());
   for (const date in grouped) {
     const section = document.createElement('div');
-    section.innerHTML = `<h4>${date}</h4>`;
+    section.innerHTML = `<h5 class="mt-3">${date}</h5>`;
     const table = document.createElement('table');
-    table.className = 'table';
-    table.innerHTML = '<thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th></th></tr></thead>';
+    table.className = 'table table-bordered table-striped';
+    table.innerHTML = '<thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th>Action</th></tr></thead>';
     const tbody = document.createElement('tbody');
     grouped[date].forEach((w, i) => {
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${w.exercise}</td><td>${w.duration} min</td><td>${w.calories}</td>
-        <td><button class="btn secondary" data-date="${date}" data-i="${i}">Delete</button></td>`;
+        <td><button class="btn btn-sm btn-outline-danger" data-date="${date}" data-i="${i}">Delete</button></td>`;
       tbody.appendChild(tr);
     });
     table.appendChild(tbody);
@@ -142,7 +245,7 @@ document.getElementById('clearAll').addEventListener('click', () => {
 function updateShareButtons() {
   const allWorkouts = getList();
   if (allWorkouts.length === 0) {
-    document.getElementById('shareWorkouts').innerHTML = '<p>No workouts to share.</p>';
+    document.getElementById('shareWorkouts').innerHTML = '<p class="text-muted">No workouts to share.</p>';
     return;
   }
   const today = new Date().toISOString().split('T')[0];
@@ -153,43 +256,32 @@ function updateShareButtons() {
   const text = encodeURIComponent(`My workout summary: ${summary}`);
   const url = encodeURIComponent(window.location.href);
   document.getElementById('shareWorkouts').innerHTML = `
-    <a href="https://api.whatsapp.com/send?text=${text}%20${url}" target="_blank">WhatsApp</a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank">Facebook</a>
-    <a href="https://twitter.com/intent/tweet?text=${text}&url=${url}&hashtags=fitness,tracker" target="_blank">Twitter</a>
+    <a href="https://api.whatsapp.com/send?text=${text}" target="_blank" class="icon-btn-img"><img src="images/whatsapp.png" alt="WhatsApp"></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="icon-btn-img"><img src="images/facebook.png" alt="Facebook"></a>
+    <a href="https://twitter.com/intent/tweet?text=${text}" target="_blank" class="icon-btn-img"><img src="images/x.png" alt="Twitter"></a>
   `;
 }
 </script>
 
 <!-- Footer -->
-<div class="footer">
-  <div class="container">
-    <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
-    <div id="sharebar" class="sharebar"></div>
-    <script>document.addEventListener('DOMContentLoaded',()=>{renderShareBar('sharebar',{text:'Check out this Fitness Tech page!'});});</script>
-    <hr>
-    <div class="grid">
-      <div>
-        <p><strong>Quick Links</strong></p>
-        <p><a href="index.html">Home</a><br><a href="fitness-gadgets.html">Gadgets</a><br><a href="workout-tracker.html">Workout Tracker</a></p>
-      </div>
-      <div>
-        <p><strong>Facebook Page Plugin (example)</strong></p>
-        <div class="notice">Below is a demo Facebook Page plugin iframe to satisfy the "social media plugin" requirement.</div>
-        <div style="max-width:340px">
-          <iframe title="Facebook Page Plugin" style="border:none;overflow:hidden;width:100%;height:140px"
-            src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FFacebookDevelopers&tabs=timeline&width=340&height=140&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false">
-          </iframe>
-        </div>
-      </div>
-    </div>
+<div class="footer mt-5">
+  <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
+  <div class="share-icons mb-3">
+    <a href="https://api.whatsapp.com/send?text=Check+out+FitnessTech" target="_blank" class="icon-btn-img"><img src="images/whatsapp.png" alt="WhatsApp"></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank" class="icon-btn-img"><img src="images/facebook.png" alt="Facebook"></a>
+    <a href="https://twitter.com/intent/tweet?text=Check+out+FitnessTech" target="_blank" class="icon-btn-img"><img src="images/x.png" alt="Twitter"></a>
   </div>
-</div>
-<div id="cookiebar" class="cookiebar">
-  <div class="container">
-    <strong>We use cookies</strong> to remember your preferences (like your username).
-    <button class="btn" onclick="acceptCookies()">Accept</button>
-  </div>
+  <hr>
+  <h6>Quick Links</h6>
+  <p>
+    <a href="index.html">Home</a> |
+    <a href="fitness-gadgets.html">Gadgets</a> |
+    <a href="workout-tracker.html">Workout Tracker</a> |
+    <a href="contact.html">Contact</a> |
+    <a href="dashboard.html">Dashboard</a>
+  </p>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
