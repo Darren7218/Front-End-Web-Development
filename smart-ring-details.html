@@ -13,17 +13,24 @@ body { font-family:'Segoe UI',sans-serif; background:#fafafa; transition:backgro
 .navbar .nav-link { color:#333; }
 .navbar .nav-link:hover { color:#007bff; }
 
-/* Hero Section */
+/* ✅ Hero Section - fixed background */
 .hero {
   text-align:center;
   padding:60px 20px;
-  background:linear-gradient(135deg,#007bff,#6c63ff);
-  color:#fff;
-  transition:background 0.3s;
+  background:#f8f9fa; /* Neutral background instead of blue gradient */
+  color:#333;
+  transition:background 0.3s,color 0.3s;
 }
-.hero img { max-width:200px;margin-bottom:20px;border-radius:10px; }
-.hero h1 { font-size:2.5rem;margin-bottom:10px; }
-.hero p { font-size:1.2rem; }
+.hero img { max-width:220px;margin-bottom:20px;border-radius:10px; }
+.hero h1 { font-size:2rem;margin-bottom:10px; }
+.hero p { font-size:1.1rem; color:#555; }
+
+/* ✅ Mobile Responsive */
+@media(max-width:576px){
+  .hero h1 { font-size:1.8rem; }
+  .hero p { font-size:1rem; }
+  .hero img { max-width:150px; }
+}
 
 /* Details Section */
 .details-section { padding:40px 20px; }
@@ -102,6 +109,19 @@ body.dark-mode .specs-section th { background:#2a2a2a;color:#fff; }
 body.dark-mode .buy-section { background:#1f1f1f;color:#fff; }
 body.dark-mode .footer { background:#1f1f1f;color:#ccc; }
 body.dark-mode .icon-btn-img { background:#2a2a2a;border-color:#555; }
+
+/* Google Form Responsive */
+.google-form-container {
+  max-width:800px;
+  margin:30px auto 0;
+  height:1000px;
+}
+.google-form-container iframe {
+  width:100%;
+  height:100%;
+  border:none;
+  border-radius:10px;
+}
 </style>
 </head>
 <body>
@@ -141,7 +161,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
-<!-- Hero -->
+<!-- ✅ Hero -->
 <section class="hero">
   <img src="images/smartRing_main.png" alt="Smart Ring">
   <h1>Smart Ring</h1>
@@ -199,7 +219,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 <!-- Buy Section -->
 <section class="buy-section">
   <h3>Ready to Order Your Smart Ring?</h3>
-  <a href="https://forms.gle/your-google-form-link" target="_blank" class="btn btn-success btn-lg mt-3">Buy Now</a>
+  <div class="google-form-container">
+    <iframe src="https://forms.gle/cdBbFrr9VAfg4tcr8" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+  </div>
 </section>
 
 <!-- Footer -->

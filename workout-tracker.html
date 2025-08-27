@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Workout Tracker - FitnessTech</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="app.js"></script>
 <style>
 body { font-family: 'Segoe UI', sans-serif; background:#fafafa; transition:background 0.3s, color 0.3s; }
 
@@ -60,7 +60,7 @@ body { font-family: 'Segoe UI', sans-serif; background:#fafafa; transition:backg
 }
 .footer hr { margin:15px auto; width:90%; }
 
-/* Dark Mode Styles */
+/* Dark Mode */
 body.dark-mode { background:#121212; color:#e0e0e0; }
 body.dark-mode .navbar { background:#1e1e1e !important; }
 body.dark-mode .navbar .nav-link,
@@ -71,6 +71,8 @@ body.dark-mode .card-custom { background:#1f1f1f; color:#e0e0e0; }
 body.dark-mode .table thead th { background:#333; color:#fff; }
 body.dark-mode .footer { background:#1e1e1e; color:#ccc; }
 body.dark-mode .icon-btn-img { background:#2a2a2a; border-color:#555; }
+
+#bmiResult { font-weight:bold; font-size:1.1rem; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -104,11 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('navLogout').style.display='inline';
   }
 
-  // Dark Mode Toggle
   const toggleBtn = document.getElementById('darkModeToggle');
   const isDark = localStorage.getItem('darkMode') === 'true';
   if(isDark) document.body.classList.add('dark-mode');
-
   toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
 
   toggleBtn.addEventListener('click', () => {
@@ -123,14 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- Header -->
 <section class="header">
   <h2>Workout Tracker</h2>
-  <p class="text-muted">Log your exercises and share your fitness progress easily.</p>
+  <p class="text-muted">Log your exercises, calculate BMI, and track your progress visually.</p>
 </section>
 
 <!-- Main Content -->
 <div class="container mt-4">
   <div class="row">
-    <!-- Add Workout Form -->
+    <!-- Left Column -->
     <div class="col-md-4">
+      <!-- Add Workout Form -->
       <div class="card-custom">
         <h3>Add Workout</h3>
         <form id="wForm">
@@ -140,36 +141,96 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="mb-3">
             <label class="form-label">Exercise</label>
-            <input class="form-control" id="ex" required placeholder="Push Ups">
+            <input class="form-control" id="ex" required placeholder="Running, Push Ups">
           </div>
           <div class="mb-3">
             <label class="form-label">Duration (min)</label>
             <input class="form-control" id="du" type="number" min="1" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Calories</label>
-            <input class="form-control" id="cal" type="number" min="0" required>
+            <label class="form-label">Calories Burned</label>
+            <input class="form-control" id="cal" type="text" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" id="notes" rows="2" placeholder="Add personal notes..."></textarea>
           </div>
           <button class="btn btn-primary w-100" type="submit">Save Workout</button>
         </form>
       </div>
+
+      <!-- BMI Calculator -->
+      <div class="card-custom">
+        <h3>BMI & BMR Calculator</h3>
+        <div class="mb-3">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" class="form-control" id="weight" min="1" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" class="form-control" id="height" min="1" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Age</label>
+          <input type="number" class="form-control" id="age" min="1" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Gender</label>
+          <select id="gender" class="form-select">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <button class="btn btn-success w-100" onclick="calculateBMI()">Calculate</button>
+        <div id="bmiResult" class="text-center mt-3"></div>
+      </div>
     </div>
 
-    <!-- Workout List -->
+    <!-- Right Column -->
     <div class="col-md-8">
       <div class="card-custom">
         <h3>Your Workouts</h3>
         <div id="workoutContainer" class="mt-3"></div>
+        <canvas id="progressChart" style="max-height:300px;"></canvas>
         <button class="btn btn-danger mt-3" id="clearAll">Clear All</button>
-        <hr>
-        <h4>Share Your Workouts</h4>
-        <div class="sharebar mt-2" id="shareWorkouts"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
+// Basic MET values
+const METS = { running: 9.8, cycling: 8.5, walking: 3.5, "push ups": 8, yoga: 3 };
+
+// Calculate calories burned
+document.getElementById('du').addEventListener('input', calculateCalories);
+document.getElementById('ex').addEventListener('input', calculateCalories);
+
+function calculateCalories() {
+  const ex = document.getElementById('ex').value.toLowerCase();
+  const duration = parseFloat(document.getElementById('du').value);
+  const weight = parseFloat(document.getElementById('weight').value) || 70;
+  if (!ex || !duration) return;
+  const met = METS[ex] || 5;
+  const calories = ((met * 3.5 * weight) / 200) * duration;
+  document.getElementById('cal').value = calories.toFixed(0);
+}
+
+function calculateBMI() {
+  const weight = parseFloat(document.getElementById('weight').value);
+  const height = parseFloat(document.getElementById('height').value) / 100;
+  const age = parseInt(document.getElementById('age').value);
+  const gender = document.getElementById('gender').value;
+  if (!weight || !height || !age) return alert('Fill all fields!');
+  const bmi = (weight / (height * height)).toFixed(1);
+  let category = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obese';
+  const bmr = gender === 'male'
+    ? (88.36 + 13.4 * weight + 4.8 * (height * 100) - 5.7 * age).toFixed(0)
+    : (447.6 + 9.2 * weight + 3.1 * (height * 100) - 4.3 * age).toFixed(0);
+  document.getElementById('bmiResult').innerHTML = `BMI: ${bmi} (${category})<br>BMR: ${bmr} kcal/day`;
+}
+
+// Workout Functions
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('date').valueAsDate = new Date();
   render();
@@ -195,11 +256,11 @@ function render() {
     section.innerHTML = `<h5 class="mt-3">${date}</h5>`;
     const table = document.createElement('table');
     table.className = 'table table-bordered table-striped';
-    table.innerHTML = '<thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th>Action</th></tr></thead>';
+    table.innerHTML = '<thead><tr><th>Exercise</th><th>Duration</th><th>Calories</th><th>Notes</th><th>Action</th></tr></thead>';
     const tbody = document.createElement('tbody');
     grouped[date].forEach((w, i) => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${w.exercise}</td><td>${w.duration} min</td><td>${w.calories}</td>
+      tr.innerHTML = `<td>${w.exercise}</td><td>${w.duration} min</td><td>${w.calories}</td><td>${w.notes}</td>
         <td><button class="btn btn-sm btn-outline-danger" data-date="${date}" data-i="${i}">Delete</button></td>`;
       tbody.appendChild(tr);
     });
@@ -207,7 +268,7 @@ function render() {
     section.appendChild(table);
     container.appendChild(section);
   }
-  updateShareButtons();
+  updateChart();
 }
 
 document.getElementById('wForm').addEventListener('submit', (e) => {
@@ -216,9 +277,9 @@ document.getElementById('wForm').addEventListener('submit', (e) => {
     date: date.value,
     exercise: ex.value.trim(),
     duration: +du.value,
-    calories: +cal.value
+    calories: +cal.value,
+    notes: notes.value.trim()
   };
-  if (!w.exercise || !w.duration) { alert('Please enter valid data'); return; }
   const list = getList();
   list.push(w);
   setList(list);
@@ -246,35 +307,33 @@ document.getElementById('clearAll').addEventListener('click', () => {
   }
 });
 
-function updateShareButtons() {
-  const allWorkouts = getList();
-  if (allWorkouts.length === 0) {
-    document.getElementById('shareWorkouts').innerHTML = '<p class="text-muted">No workouts to share.</p>';
-    return;
-  }
-  const today = new Date().toISOString().split('T')[0];
-  const todayWorkouts = allWorkouts.filter(w => w.date === today);
-  const summary = todayWorkouts.length > 0
-    ? todayWorkouts.map(w => `${w.exercise} ${w.duration}min (${w.calories}cal)`).join(', ')
-    : 'My fitness progress!';
-  const text = encodeURIComponent(`My workout summary: ${summary}`);
-  const url = encodeURIComponent(window.location.href);
-  document.getElementById('shareWorkouts').innerHTML = `
-    <a href="https://api.whatsapp.com/send?text=${text}" target="_blank" class="icon-btn-img"><img src="images/whatsapp.png" alt="WhatsApp"></a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="icon-btn-img"><img src="images/facebook.png" alt="Facebook"></a>
-    <a href="https://twitter.com/intent/tweet?text=${text}" target="_blank" class="icon-btn-img"><img src="images/x.png" alt="Twitter"></a>
-  `;
+// Chart.js Progress Chart
+let chart;
+function updateChart() {
+  const workouts = getList();
+  const grouped = groupByDate(workouts);
+  const labels = Object.keys(grouped);
+  const data = labels.map(date => grouped[date].reduce((sum, w) => sum + w.calories, 0));
+  if (chart) chart.destroy();
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Calories Burned Per Day',
+        data,
+        backgroundColor: '#007bff'
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
 }
 </script>
 
 <!-- Footer -->
 <div class="footer mt-5">
   <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
-  <div class="share-icons mb-3">
-    <a href="https://api.whatsapp.com/send?text=Check+out+FitnessTech" target="_blank" class="icon-btn-img"><img src="images/whatsapp.png" alt="WhatsApp"></a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank" class="icon-btn-img"><img src="images/facebook.png" alt="Facebook"></a>
-    <a href="https://twitter.com/intent/tweet?text=Check+out+FitnessTech" target="_blank" class="icon-btn-img"><img src="images/x.png" alt="Twitter"></a>
-  </div>
   <hr>
   <h6>Quick Links</h6>
   <p>
