@@ -9,58 +9,17 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 body { font-family: 'Segoe UI', sans-serif; background:#fafafa; transition:background 0.3s, color 0.3s; }
-
-/* Navbar */
 .navbar { box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 .navbar .nav-link { color:#333; }
 .navbar .nav-link:hover { color:#007bff; }
-
-/* Header */
 .header { text-align:center; padding:40px 20px; background:#f8f9fa; border-bottom:1px solid #ddd; }
 .header h2 { font-size:2rem; font-weight:bold; }
-
-/* Card Styling */
-.card-custom {
-  background:#fff;
-  border-radius:10px;
-  padding:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  margin-bottom:20px;
-  transition:background 0.3s, color 0.3s;
-}
+.card-custom { background:#fff; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05); margin-bottom:20px; transition:background 0.3s, color 0.3s; }
 .card-custom h3 { font-size:1.3rem; margin-bottom:15px; }
-
-/* Table Styling */
 .table th, .table td { vertical-align:middle; }
 .table thead th { background:#f1f1f1; transition:background 0.3s; }
-
-/* Share Icons */
-.icon-btn-img {
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:#fff;
-  overflow:hidden;
-  margin:0 6px;
-  border:1px solid #ccc;
-  box-shadow:0 1px 3px rgba(0,0,0,0.1);
-}
-.icon-btn-img img { width:70%; height:70%; object-fit:contain; }
-
-/* Footer */
-.footer {
-  background:#fff;
-  padding:20px;
-  text-align:center;
-  border-top:1px solid #ddd;
-  transition:background 0.3s, color 0.3s;
-}
+.footer { background:#fff; padding:20px; text-align:center; border-top:1px solid #ddd; transition:background 0.3s, color 0.3s; }
 .footer hr { margin:15px auto; width:90%; }
-
-/* Dark Mode */
 body.dark-mode { background:#121212; color:#e0e0e0; }
 body.dark-mode .navbar { background:#1e1e1e !important; }
 body.dark-mode .navbar .nav-link,
@@ -70,9 +29,8 @@ body.dark-mode .header { background:#1e1e1e; border-bottom-color:#333; }
 body.dark-mode .card-custom { background:#1f1f1f; color:#e0e0e0; }
 body.dark-mode .table thead th { background:#333; color:#fff; }
 body.dark-mode .footer { background:#1e1e1e; color:#ccc; }
-body.dark-mode .icon-btn-img { background:#2a2a2a; border-color:#555; }
-
 #bmiResult { font-weight:bold; font-size:1.1rem; margin-top:10px; }
+#quoteBox { font-style:italic; font-size:0.95rem; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -105,12 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('navLogin').style.display='none';
     document.getElementById('navLogout').style.display='inline';
   }
-
   const toggleBtn = document.getElementById('darkModeToggle');
   const isDark = localStorage.getItem('darkMode') === 'true';
   if(isDark) document.body.classList.add('dark-mode');
   toggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-
   toggleBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     const dark = document.body.classList.contains('dark-mode');
@@ -123,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- Header -->
 <section class="header">
   <h2>Workout Tracker</h2>
-  <p class="text-muted">Log your exercises, calculate BMI, and track your progress visually.</p>
+  <p class="text-muted">Log your exercises, calculate BMI, track your progress & get motivated.</p>
+  <div id="quoteBox" class="text-primary"></div>
 </section>
 
 <!-- Main Content -->
@@ -157,32 +114,25 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <button class="btn btn-primary w-100" type="submit">Save Workout</button>
         </form>
+
+        <!-- Preset Workouts -->
+        <h5 class="mt-3">Workout Presets</h5>
+        <button class="btn btn-outline-secondary btn-sm" onclick="loadPreset('Beginner Run')">Beginner 30-min Run</button>
+        <button class="btn btn-outline-secondary btn-sm mt-2" onclick="loadPreset('Full Body')">Full-body Strength</button>
       </div>
 
       <!-- BMI Calculator -->
       <div class="card-custom">
         <h3>BMI & BMR Calculator</h3>
-        <div class="mb-3">
-          <label class="form-label">Weight (kg)</label>
-          <input type="number" class="form-control" id="weight" min="1" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Height (cm)</label>
-          <input type="number" class="form-control" id="height" min="1" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Age</label>
-          <input type="number" class="form-control" id="age" min="1" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Gender</label>
-          <select id="gender" class="form-select">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
+        <div class="mb-3"><label class="form-label">Weight (kg)</label><input type="number" class="form-control" id="weight" min="1"></div>
+        <div class="mb-3"><label class="form-label">Height (cm)</label><input type="number" class="form-control" id="height" min="1"></div>
+        <div class="mb-3"><label class="form-label">Age</label><input type="number" class="form-control" id="age" min="1"></div>
+        <div class="mb-3"><label class="form-label">Gender</label>
+          <select id="gender" class="form-select"><option value="male">Male</option><option value="female">Female</option></select>
         </div>
         <button class="btn btn-success w-100" onclick="calculateBMI()">Calculate</button>
         <div id="bmiResult" class="text-center mt-3"></div>
+        <canvas id="bmiChart" style="max-height:200px; margin-top:10px;"></canvas>
       </div>
     </div>
 
@@ -199,10 +149,30 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <script>
+// Fetch Motivational Quote
+fetch('https://type.fit/api/quotes')
+.then(res => res.json())
+.then(data => {
+  const quote = data[Math.floor(Math.random() * data.length)];
+  document.getElementById('quoteBox').textContent = `"${quote.text}" - ${quote.author || 'Unknown'}`;
+});
+
+// Workout Presets
+function loadPreset(type) {
+  if(type === 'Beginner Run') {
+    document.getElementById('ex').value = 'Running';
+    document.getElementById('du').value = 30;
+    calculateCalories();
+  } else if(type === 'Full Body') {
+    document.getElementById('ex').value = 'Push Ups';
+    document.getElementById('du').value = 20;
+    calculateCalories();
+  }
+}
+
 // Basic MET values
 const METS = { running: 9.8, cycling: 8.5, walking: 3.5, "push ups": 8, yoga: 3 };
 
-// Calculate calories burned
 document.getElementById('du').addEventListener('input', calculateCalories);
 document.getElementById('ex').addEventListener('input', calculateCalories);
 
@@ -216,6 +186,8 @@ function calculateCalories() {
   document.getElementById('cal').value = calories.toFixed(0);
 }
 
+let bmiHistory = [];
+let bmiChart;
 function calculateBMI() {
   const weight = parseFloat(document.getElementById('weight').value);
   const height = parseFloat(document.getElementById('height').value) / 100;
@@ -228,23 +200,28 @@ function calculateBMI() {
     ? (88.36 + 13.4 * weight + 4.8 * (height * 100) - 5.7 * age).toFixed(0)
     : (447.6 + 9.2 * weight + 3.1 * (height * 100) - 4.3 * age).toFixed(0);
   document.getElementById('bmiResult').innerHTML = `BMI: ${bmi} (${category})<br>BMR: ${bmr} kcal/day`;
+  bmiHistory.push(bmi);
+  updateBMIChart();
 }
 
-// Workout Functions
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('date').valueAsDate = new Date();
-  render();
-});
+function updateBMIChart() {
+  if (bmiChart) bmiChart.destroy();
+  const ctx = document.getElementById('bmiChart').getContext('2d');
+  bmiChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: bmiHistory.map((_, i) => `Check ${i+1}`), datasets: [{ label:'BMI History', data:bmiHistory, borderColor:'#28a745', fill:false }] },
+    options: { responsive:true, scales:{ y:{ beginAtZero:false } } }
+  });
+}
+
+// Workout Logic
+document.addEventListener('DOMContentLoaded', () => { document.getElementById('date').valueAsDate = new Date(); render(); });
 
 function getList() { return JSON.parse(localStorage.getItem('workouts')||'[]'); }
 function setList(arr) { localStorage.setItem('workouts', JSON.stringify(arr)); }
 
 function groupByDate(list) {
-  return list.reduce((acc, w) => {
-    acc[w.date] = acc[w.date] || [];
-    acc[w.date].push(w);
-    return acc;
-  }, {});
+  return list.reduce((acc, w) => { acc[w.date] = acc[w.date] || []; acc[w.date].push(w); return acc; }, {});
 }
 
 function render() {
@@ -273,13 +250,7 @@ function render() {
 
 document.getElementById('wForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  const w = {
-    date: date.value,
-    exercise: ex.value.trim(),
-    duration: +du.value,
-    calories: +cal.value,
-    notes: notes.value.trim()
-  };
+  const w = { date: date.value, exercise: ex.value.trim(), duration: +du.value, calories: +cal.value, notes: notes.value.trim() };
   const list = getList();
   list.push(w);
   setList(list);
@@ -301,13 +272,10 @@ document.getElementById('workoutContainer').addEventListener('click', (e) => {
 });
 
 document.getElementById('clearAll').addEventListener('click', () => {
-  if (confirm('Clear all workouts?')) {
-    localStorage.removeItem('workouts');
-    render();
-  }
+  if (confirm('Clear all workouts?')) { localStorage.removeItem('workouts'); render(); }
 });
 
-// Chart.js Progress Chart
+// Progress Chart
 let chart;
 function updateChart() {
   const workouts = getList();
@@ -318,14 +286,7 @@ function updateChart() {
   const ctx = document.getElementById('progressChart').getContext('2d');
   chart = new Chart(ctx, {
     type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Calories Burned Per Day',
-        data,
-        backgroundColor: '#007bff'
-      }]
-    },
+    data: { labels, datasets: [{ label: 'Calories Burned Per Day', data, backgroundColor: '#007bff' }] },
     options: { responsive: true, scales: { y: { beginAtZero: true } } }
   });
 }
