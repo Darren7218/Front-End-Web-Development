@@ -38,6 +38,31 @@ body.dark-mode .footer { background:#1e1e1e; color:#ccc; }
 #bmiResult { font-weight:bold; font-size:1.1rem; margin-top:10px; }
 #quoteBox { font-style:italic; font-size:0.95rem; margin-top:10px; }
 
+/* Circular icon buttons */
+.icon-btn-img {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+  margin: 0 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.icon-btn-img img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+body.dark-mode .icon-btn-img {
+  background: #2a2a2a;
+  border-color: #555;
+}
+
+
 /* small control buttons next to charts */
 .chart-controls { display:flex; gap:8px; align-items:center; margin:8px 0 14px; }
 .chart-controls .btn { font-size:0.9rem; padding:6px 10px; }
@@ -148,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="btn btn-outline-primary btn-sm" onclick="shareChart('bmiChart', 'My BMI Chart')">Share BMI Chart</button>
           <button class="btn btn-outline-secondary btn-sm" onclick="downloadChartPNG('bmiChart', 'bmi-chart.png')">Download PNG</button>
           <button class="btn btn-outline-success btn-sm" onclick="exportChartPDF('bmiChart','bmi-chart.pdf')">Export PDF</button>
+          <button class="btn btn-danger btn-sm mt-2 w-100" onclick="clearBMIHistory()">Clear BMI History</button>
         </div>
 
         <canvas id="bmiChart" style="max-height:200px; margin-top:10px;"></canvas>
@@ -274,7 +300,15 @@ function updateBMIChart() {
   });
 }
 
-
+// ✅ Clear BMI History Button
+function clearBMIHistory() {
+  if (confirm('Clear all BMI history?')) {
+    localStorage.removeItem('bmiData');
+    bmiHistoryData = [];
+    updateBMIChart();
+    document.getElementById('bmiResult').innerHTML = '';
+  }
+}
 
 // Workout Logic
 document.addEventListener('DOMContentLoaded', () => {
@@ -422,13 +456,13 @@ async function exportChartPDF(canvasId, filename = 'chart.pdf') {
   let labels = [];
   let values = [];
 
-if (canvasId === 'bmiChart') {
-  labels = bmiHistoryData.map(d => d.date);
-  values = bmiHistoryData.map(d => d.bmi);
-} else {
-  labels = chart.data.labels;
-  values = chart.data.datasets[0].data;
-}
+  if (canvasId === 'bmiChart') {
+    labels = bmiHistoryData.map(d => d.date);
+    values = bmiHistoryData.map(d => d.bmi);
+  } else {
+    labels = chart.data.labels;
+    values = chart.data.datasets[0].data;
+  }
 
   // List out data
   let textY = 300;
@@ -455,13 +489,27 @@ if (canvasId === 'bmiChart') {
 
   pdf.save(filename);
 }
-
 </script>
+
 
 
 <!-- Footer -->
 <div class="footer mt-5">
   <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
+
+  <!-- Share Buttons -->
+  <div class="d-flex justify-content-center my-3">
+    <a href="https://api.whatsapp.com/send?text=Check+out+FitnessTech:+https://yourwebsite.com" target="_blank" class="icon-btn-img">
+      <img src="images/whatsapp.png" alt="WhatsApp">
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourwebsite.com" target="_blank" class="icon-btn-img">
+      <img src="images/facebook.png" alt="Facebook">
+    </a>
+    <a href="https://twitter.com/intent/tweet?text=Check+out+FitnessTech:+https://yourwebsite.com" target="_blank" class="icon-btn-img">
+      <img src="images/x.png" alt="Twitter">
+    </a>
+  </div>
+
   <hr>
   <h6>Quick Links</h6>
   <p>
@@ -472,6 +520,7 @@ if (canvasId === 'bmiChart') {
     <a href="dashboard.html">Dashboard</a>
   </p>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

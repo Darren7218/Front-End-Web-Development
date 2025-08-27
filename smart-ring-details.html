@@ -13,23 +13,30 @@ body { font-family:'Segoe UI',sans-serif; background:#fafafa; transition:backgro
 .navbar .nav-link { color:#333; }
 .navbar .nav-link:hover { color:#007bff; }
 
-/* ✅ Hero Section - fixed background */
+/* ✅ Hero Section */
 .hero {
   text-align:center;
-  padding:60px 20px;
-  background:#f8f9fa; /* Neutral background instead of blue gradient */
+  padding:0;
+  background:#f8f9fa;
   color:#333;
   transition:background 0.3s,color 0.3s;
 }
-.hero img { max-width:220px;margin-bottom:20px;border-radius:10px; }
-.hero h1 { font-size:2rem;margin-bottom:10px; }
-.hero p { font-size:1.1rem; color:#555; }
+.hero img {
+  width:100%;
+  max-height:500px;
+  object-fit:cover;
+  display:block;
+}
+.hero-content {
+  padding:20px;
+}
+.hero h1 { font-size:2.5rem;margin-bottom:10px; }
+.hero p { font-size:1.2rem;color:#555; }
 
 /* ✅ Mobile Responsive */
 @media(max-width:576px){
   .hero h1 { font-size:1.8rem; }
   .hero p { font-size:1rem; }
-  .hero img { max-width:150px; }
 }
 
 /* Details Section */
@@ -37,7 +44,7 @@ body { font-family:'Segoe UI',sans-serif; background:#fafafa; transition:backgro
 .details-section h2 { font-size:1.8rem;margin-bottom:20px; }
 .details-section p { font-size:1.05rem;color:#333; }
 
-/* Features */
+/* ✅ Features Section - Larger Images */
 .features-grid {
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -46,15 +53,24 @@ body { font-family:'Segoe UI',sans-serif; background:#fafafa; transition:backgro
 }
 .feature-card {
   background:#fff;
-  padding:20px;
+  padding:25px;
   border-radius:10px;
   box-shadow:0 2px 10px rgba(0,0,0,0.05);
   text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
   transition:transform 0.3s ease,background 0.3s,color 0.3s;
 }
 .feature-card:hover { transform:translateY(-5px); }
-.feature-card img { width:60px;margin-bottom:15px; }
-.feature-card h5 { font-size:1.1rem;margin-bottom:10px; }
+.feature-card img {
+  width:100px;
+  height:100px;
+  margin-bottom:15px;
+  object-fit:contain;
+}
+.feature-card h5 { font-size:1.2rem;margin-bottom:10px; }
 
 /* Specs */
 .specs-section table {
@@ -63,6 +79,36 @@ body { font-family:'Segoe UI',sans-serif; background:#fafafa; transition:backgro
   overflow:hidden;
 }
 .specs-section th { background:#f8f9fa;width:35%; }
+
+/* ✅ Gallery Section */
+.gallery-section {
+  padding:40px 20px;
+  background:#fff;
+  text-align:center;
+  transition:background 0.3s,color 0.3s;
+}
+.gallery-section h2 {
+  font-size:1.8rem;
+  margin-bottom:25px;
+}
+.gallery-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+}
+.gallery-item img,
+.gallery-item iframe {
+  width:100%;
+  height:250px;
+  object-fit:cover;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  transition:transform 0.3s;
+}
+.gallery-item img:hover,
+.gallery-item iframe:hover {
+  transform:scale(1.03);
+}
 
 /* Buy Section */
 .buy-section {
@@ -107,6 +153,7 @@ body.dark-mode .details-section p { color:#ccc; }
 body.dark-mode .feature-card { background:#1f1f1f;color:#fff; }
 body.dark-mode .specs-section th { background:#2a2a2a;color:#fff; }
 body.dark-mode .buy-section { background:#1f1f1f;color:#fff; }
+body.dark-mode .gallery-section { background:#1e1e1e;color:#fff; }
 body.dark-mode .footer { background:#1f1f1f;color:#ccc; }
 body.dark-mode .icon-btn-img { background:#2a2a2a;border-color:#555; }
 
@@ -163,9 +210,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- ✅ Hero -->
 <section class="hero">
-  <img src="images/smartRing_main.png" alt="Smart Ring">
-  <h1>Smart Ring</h1>
-  <p>Your ultimate fitness companion in a sleek, wearable design.</p>
+  <img src="images/smartRing_main.jpg" alt="Smart Ring">
+  <div class="hero-content">
+    <h1>Smart Ring</h1>
+    <p>Your ultimate fitness companion in a sleek, wearable design.</p>
+  </div>
 </section>
 
 <!-- Details -->
@@ -173,16 +222,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   <h2>Why Choose Smart Ring?</h2>
   <p>The Smart Ring is more than just a fitness tracker. It’s a stylish, lightweight device that delivers accurate health insights without the bulk. Perfect for tracking sleep, workouts, heart rate, and daily activity in a minimalist design.</p>
 
-  <!-- Features -->
+  <!-- ✅ Features -->
   <h2 class="mt-4">Key Features</h2>
   <div class="features-grid">
     <div class="feature-card">
-      <img src="images/icon-heart.png" alt="Heart Rate">
+      <img src="images/icon-heart.jpg" alt="Heart Rate">
       <h5>Heart Rate Tracking</h5>
       <p>Real-time heart monitoring for optimal workouts and recovery.</p>
     </div>
     <div class="feature-card">
-      <img src="images/icon-sleep.png" alt="Sleep Tracking">
+      <img src="images/icon-sleep.jpg" alt="Sleep Tracking">
       <h5>Sleep Analysis</h5>
       <p>Detailed sleep patterns to improve your nightly rest.</p>
     </div>
@@ -202,19 +251,31 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div class="specs-section mt-5">
     <h2>Technical Specifications</h2>
     <table class="table table-bordered table-striped mt-3">
-      <tr><th>Battery</th><td>Up to 7 days, 60-minute full charge</td></tr>
-      <tr><th>Display</th><td>OLED</td></tr>
-      <tr><th>App</th><td>FitnessTech App (iOS/Android)</td></tr>
-      <tr><th>Compatibility</th><td>iOS 12+ / Android 7+</td></tr>
-      <tr><th>Dimensions</th><td>18mm diameter, 2.5mm thickness</td></tr>
-      <tr><th>Connectivity</th><td>Bluetooth 5.0</td></tr>
-      <tr><th>Material</th><td>Titanium with ceramic finish</td></tr>
-      <tr><th>Sensors</th><td>Skin temperature, PPG, accelerometer</td></tr>
-      <tr><th>Water Resistance</th><td>Up to 50m, IP68</td></tr>
-      <tr><th>Weight</th><td>2.8g</td></tr>
+        <tr><th>Battery</th><td>Up to 7 days, 60-minute full charge</td></tr>
+        <tr><th>App</th><td>Vēla Smart Ring App (iOS/Android)</td></tr>
+        <tr><th>Colour</th><td>Classic Silver, Matte Black, Rose Gold</td></tr>
+        <tr><th>Compatibility</th><td>iOS 12+ / Android 7+</td></tr>
+        <tr><th>Dimensions</th><td>16mm(Small), 18mm(Medium), 20mm(Large) diameter, 2.5mm thickness</td></tr>
+        <tr><th>Connectivity</th><td>Bluetooth 5.0</td></tr>
+        <tr><th>Material</th><td>Titanium with ceramic finish</td></tr>
+        <tr><th>Sensors</th><td>Skin temperature, PPG (heart rate, HRV), accelerometer</td></tr>
+        <tr><th>Water Resistance</th><td>Up to 50m, IP68</td></tr>
+        <tr><th>Weight</th><td>2.8g</td></tr>
     </table>
   </div>
 </div>
+
+<!-- ✅ Gallery Section -->
+<section class="gallery-section">
+  <h2>Gallery</h2>
+  <div class="gallery-grid">
+    <div class="gallery-item"><img src="images/RUN.jpg" alt="Smart Ring Lifestyle"></div>
+    <div class="gallery-item"><img src="images/ringg.jpg" alt="Smart Ring Features"></div>
+    <div class="gallery-item">
+      <iframe src="images/TheSmartRing.mp4" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
 
 <!-- Buy Section -->
 <section class="buy-section">

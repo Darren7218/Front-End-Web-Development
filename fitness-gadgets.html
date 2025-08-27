@@ -13,39 +13,46 @@ body { font-family: 'Segoe UI', sans-serif; background:#fafafa; transition:backg
 .navbar .nav-link { color:#333; }
 .navbar .nav-link:hover { color:#007bff; }
 
-/* Hero Section */
-.smart-ring-hero { text-align:center; padding:50px 20px; background:#f8f9fa; border-bottom:1px solid #ddd; transition:background 0.3s, color 0.3s; }
-.smart-ring-hero img { max-width:250px; margin-bottom:20px; }
-.smart-ring-hero h1 { font-size:2.5rem; margin-bottom:10px; }
+/* ✅ Hero Section - FULL WIDTH IMAGE */
+.smart-ring-hero { text-align:center; background:#f8f9fa; border-bottom:1px solid #ddd; transition:background 0.3s, color 0.3s; }
+.smart-ring-hero img { width:100%; max-height:500px; object-fit:cover; display:block; }
+.smart-ring-hero h1 { font-size:2.5rem; margin:20px 0 10px; }
 .smart-ring-hero p { font-size:1.2rem; color:#555; transition:color 0.3s; }
 
-/* Tabs Section */
+/* ✅ Tabs Section */
 .nav-tabs .nav-link { color:#333; transition:color 0.3s; }
 .nav-tabs .nav-link.active { background:#007bff; color:#fff !important; }
 .tab-content { margin-top:20px; }
-.carousel img { max-width:300px; margin:auto; }
 
-/* Carousel Control Icons Fix */
+/* ✅ Feature Carousel Images - SAME SIZE + Background */
+.carousel-inner img {
+  width:100%;
+  height:350px;
+  object-fit:contain;
+  background:#fff;
+  padding:10px;
+  border-radius:10px;
+  transition:background 0.3s;
+}
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: invert(1); /* Black for light mode */
 }
-
 body.dark-mode .carousel-control-prev-icon,
 body.dark-mode .carousel-control-next-icon {
   filter: invert(0); /* White for dark mode */
 }
 
-/* Specs Table */
+/* ✅ Specs Table */
 .table th, .table td { padding:8px; transition:background 0.3s, color 0.3s; }
 
-/* CTA Section */
+/* ✅ CTA Section */
 .cta-section { text-align:center; padding:40px 20px; background:#fff; transition:background 0.3s, color 0.3s; }
 
-/* Other Gadgets Grid */
+/* ✅ Other Gadgets Grid - CONSISTENT SCALE */
 .api-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:15px; margin-top:30px; }
 .api-card { border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.05); position:relative; overflow:hidden; transition:background 0.3s, color 0.3s; }
-.api-card img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
+.api-card img { width:100%; height:180px; object-fit:contain; background:#fff; border-radius:10px; }
 .api-card h4 { margin:10px 0 5px; }
 .api-card p { font-size:14px; color:#555; transition:color 0.3s; }
 .learn-more { margin-top:10px; display:inline-block; }
@@ -62,7 +69,7 @@ body.dark-mode .carousel-control-next-icon {
 .icon-btn-img { display:inline-flex; justify-content:center; align-items:center; width:40px; height:40px; border-radius:50%; background:#fff; overflow:hidden; margin:0 6px; border:1px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
 .icon-btn-img img { width:70%; height:70%; object-fit:contain; }
 
-/* Dark Mode */
+/* ✅ Dark Mode */
 body.dark-mode { background:#121212; color:#e0e0e0; }
 body.dark-mode .navbar { background:#1e1e1e !important; }
 body.dark-mode .navbar .nav-link,
@@ -77,16 +84,22 @@ body.dark-mode .hover-details { background:#2a2a2a; color:#fff; }
 body.dark-mode .footer { background:#1e1e1e; color:#ccc; }
 body.dark-mode .icon-btn-img { background:#2a2a2a; border-color:#555; }
 
-/* Dark Mode for Tabs & Specs */
+/* ✅ Dark Mode for Tabs & Specs */
 body.dark-mode .nav-tabs .nav-link { color:#ccc; border-color:#444; }
 body.dark-mode .nav-tabs .nav-link.active { background:#007bff; color:#fff !important; }
 body.dark-mode .tab-content { background:#1e1e1e; padding:20px; border-radius:8px; }
 body.dark-mode .table { background:#2a2a2a; color:#fff; }
 body.dark-mode .table th { background:#333; color:#fff; }
 body.dark-mode .table td { background:#1e1e1e; color:#ccc; }
+
+/* ✅ Dark Mode for Carousel Background */
+body.dark-mode .carousel-inner img {
+  background:#1f1f1f; /* Dark background for images */
+}
 </style>
 </head>
 <body>
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
@@ -133,14 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<!-- Smart Ring Hero -->
+<!-- ✅ Smart Ring Hero -->
 <section class="smart-ring-hero">
-  <img src="images/smartRing_main.png" alt="Smart Ring">
+  <img src="images/smartRing_main.jpg" alt="Smart Ring">
   <h1>Smart Ring</h1>
   <p>The sleek, powerful fitness companion that fits on your finger.</p>
 </section>
 
-<!-- Tabs -->
+<!-- ✅ Tabs -->
 <div class="container mt-4">
   <ul class="nav nav-tabs" id="smartRingTabs" role="tablist">
     <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#features">Features</a></li>
@@ -151,9 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="tab-pane fade show active" id="features">
       <div id="featureCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner text-center">
-          <div class="carousel-item active"><img src="images/smartRing.png" class="d-block" alt="Smart Ring View 1"></div>
-          <div class="carousel-item"><img src="images/smartRing2.png" class="d-block" alt="Smart Ring View 2"></div>
-          <div class="carousel-item"><img src="images/smartRing_side.png" class="d-block" alt="Smart Ring View 3"></div>
+          <div class="carousel-item active"><img src="images/multipleRing.jpg" class="d-block" alt="Smart Ring View 1"></div>
+          <div class="carousel-item"><img src="images/blackRing.jpg" class="d-block" alt="Smart Ring View 2"></div>
+          <div class="carousel-item"><img src="images/silverRing.jpg" class="d-block" alt="Smart Ring View 3"></div>
+          <div class="carousel-item"><img src="images/rosegoldRing.jpg" class="d-block" alt="Smart Ring View 4"></div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#featureCarousel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon"></span>
@@ -167,10 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="tab-pane fade" id="specs">
       <table class="table table-striped">
         <tr><th>Battery</th><td>Up to 7 days, 60-minute full charge</td></tr>
-        <tr><th>Display</th><td>OLED</td></tr>
-        <tr><th>App</th><td>FitnessTech App (iOS/Android)</td></tr>
+        <tr><th>App</th><td>Vēla Smart Ring App (iOS/Android)</td></tr>
+        <tr><th>Colour</th><td>Classic Silver, Matte Black, Rose Gold</td></tr>
         <tr><th>Compatibility</th><td>iOS 12+ / Android 7+</td></tr>
-        <tr><th>Dimensions</th><td>18mm diameter, 2.5mm thickness</td></tr>
+        <tr><th>Dimensions</th><td>16mm(Small), 18mm(Medium), 20mm(Large) diameter, 2.5mm thickness</td></tr>
         <tr><th>Connectivity</th><td>Bluetooth 5.0</td></tr>
         <tr><th>Material</th><td>Titanium with ceramic finish</td></tr>
         <tr><th>Sensors</th><td>Skin temperature, PPG (heart rate, HRV), accelerometer</td></tr>
@@ -185,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
-<!-- CTA -->
+<!-- ✅ CTA -->
 <section class="cta-section">
   <h3>Ready to experience the future of fitness?</h3>
   <a href="smart-ring-details.html" class="btn btn-primary btn-lg mt-3">Learn More & Buy</a>
@@ -193,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <hr>
 
-<!-- Other Gadgets -->
+<!-- ✅ Other Gadgets -->
 <div class="container">
   <h3>Other Recommended Gadgets</h3>
   <div class="api-grid">
@@ -245,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
-<!-- Footer -->
+<!-- ✅ Footer -->
 <div class="footer text-center mt-5 p-4">
   <p><strong>FitnessTech</strong> — learn, track, and share your fitness journey.</p>
   <div class="share-icons mb-3">
